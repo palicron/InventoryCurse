@@ -2,11 +2,33 @@
 
 
 #include "Player/Inv_PlayerController.h"
-#include "Inventory.h"
+
+#include "EnhancedInputComponent.h"
+#include "EnhancedInputSubsystems.h"
+#include "Components/InputComponent.h"
 
 void AInv_PlayerController::BeginPlay()
 {
 	Super::BeginPlay();
+	
+	if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer()))
+	{
+		for (UInputMappingContext* CurrentContext : DefaultIMCs)
+		{
+			Subsystem->AddMappingContext(CurrentContext, 0);
+		}
+	}
+}
 
-	UE_LOG(LogInventory, Log, TEXT("BeginPlay For PlayerController"));
+void AInv_PlayerController::SetupInputComponent()
+{
+	Super::SetupInputComponent();
+	UEnhancedInputComponent* Input = CastChecked<UEnhancedInputComponent>(InputComponent);
+
+	Input->BindAction(PrimaryInteractAction,ETriggerEvent::Started,this,&AInv_PlayerController::PrimaryInteract);
+}
+
+void AInv_PlayerController::PrimaryInteract()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Primary Interact"));
 }
