@@ -7,6 +7,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "Widgets/HUD/Inv_HUDWidget.h"
 #include "Components/InputComponent.h"
+#include "Items/Components/Inv_ItemComponent.h"
 #include "Kismet/GameplayStatics.h"
 
 AInv_PlayerController::AInv_PlayerController()
@@ -92,6 +93,14 @@ void AInv_PlayerController::TraceForItem()
 	
 	LastActor = ThisActor;
 	ThisActor = OutHit.GetActor();
+
+	if (!ThisActor.IsValid())
+	{
+		if (HUDWidget)
+		{
+			HUDWidget->HidePickUpMessage();
+		}
+	}
 	
 	if (ThisActor == LastActor)
 	{
@@ -100,6 +109,18 @@ void AInv_PlayerController::TraceForItem()
 
 	if (ThisActor.IsValid())
 	{
+		const UInv_ItemComponent* ItemComponent = ThisActor->FindComponentByClass<UInv_ItemComponent>();
+		if (!ItemComponent)
+		{
+			return;
+		}
+
+		if (HUDWidget)
+		{
+			HUDWidget->ShowPickUpMessage(ItemComponent->GetPickupMessage());
+		}
+
+		
 		UE_LOG(LogTemp, Warning, TEXT("Hit Actor: %s"), *ThisActor->GetName());
 	}
 
