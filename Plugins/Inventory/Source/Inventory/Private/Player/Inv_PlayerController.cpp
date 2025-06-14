@@ -7,6 +7,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "Widgets/HUD/Inv_HUDWidget.h"
 #include "Components/InputComponent.h"
+#include "Interaction/Inv_Highlightable.h"
 #include "Items/Components/Inv_ItemComponent.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -110,6 +111,13 @@ void AInv_PlayerController::TraceForItem()
 	if (ThisActor.IsValid())
 	{
 		const UInv_ItemComponent* ItemComponent = ThisActor->FindComponentByClass<UInv_ItemComponent>();
+		
+		if (IInv_Highlightable* Highlightable = ThisActor->FindComponentByInterface<IInv_Highlightable>())
+		{
+			
+			IInv_Highlightable::Execute_Highlight(Cast<UObject>(Highlightable));
+		}
+		
 		if (!ItemComponent)
 		{
 			return;
@@ -126,9 +134,12 @@ void AInv_PlayerController::TraceForItem()
 
 	if (LastActor.IsValid())
 	{
+		if (IInv_Highlightable* Highlightable = LastActor->FindComponentByInterface<IInv_Highlightable>())
+		{
+			IInv_Highlightable::Execute_Unhighlight(Cast<UObject>(Highlightable));
+		}
 		UE_LOG(LogTemp, Warning, TEXT("Stopt racin last Actor: %s"), *LastActor->GetName());
 	}
-
 	
 }
 
