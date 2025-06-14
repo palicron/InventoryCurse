@@ -6,6 +6,7 @@
 #include "GameFramework/PlayerController.h"
 #include "Inv_PlayerController.generated.h"
 
+class UInv_HUDWidget;
 class UInputAction;
 class UInputMappingContext;
 /**
@@ -32,4 +33,12 @@ private:
 
 	UFUNCTION()
 	void PrimaryInteract();
+
+	UPROPERTY(EditDefaultsOnly,Category= "Inventory")
+	TSubclassOf<UInv_HUDWidget> HUDWidgetClass;
+
+	UPROPERTY()
+	TObjectPtr<UInv_HUDWidget> HUDWidget;
+
+	void CreateHUDWidget();
 };
