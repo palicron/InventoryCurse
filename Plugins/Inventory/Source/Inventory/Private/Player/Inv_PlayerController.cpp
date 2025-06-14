@@ -7,6 +7,20 @@
 #include "EnhancedInputSubsystems.h"
 #include "Widgets/HUD/Inv_HUDWidget.h"
 #include "Components/InputComponent.h"
+#include "Kismet/GameplayStatics.h"
+
+AInv_PlayerController::AInv_PlayerController()
+{
+	PrimaryActorTick.bCanEverTick = true;
+	TraceDistance = 1000.f;
+}
+
+void AInv_PlayerController::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+	TraceForItem();
+}
 
 void AInv_PlayerController::BeginPlay()
 {
@@ -36,6 +50,7 @@ void AInv_PlayerController::PrimaryInteract()
 	UE_LOG(LogTemp, Warning, TEXT("Primary Interact"));
 }
 
+
 void AInv_PlayerController::CreateHUDWidget()
 {
 	if (!IsLocalController())
@@ -49,3 +64,50 @@ void AInv_PlayerController::CreateHUDWidget()
 		HUDWidget->AddToViewport();
 	}
 }
+
+void AInv_PlayerController::TraceForItem()
+{
+	if (!GEngine || !GEngine->GameViewport)
+	{
+		return;
+	}
+
+	FVector2D ViewPortSize;
+	GEngine->GameViewport->GetViewportSize(ViewPortSize);
+
+	const FVector2D ViewPortCenter = ViewPortSize * 0.5f;
+
+	FVector ViewPortLocation;
+	FVector ViewPortDirection;
+
+	if (!UGameplayStatics::DeprojectScreenToWorld(this, ViewPortCenter, ViewPortLocation, ViewPortDirection))
+	{
+		return;
+	}
+
+	const FVector TraceEnd = ViewPortLocation + (ViewPortDirection * TraceDistance);
+	FHitResult OutHit;
+
+	GetWorld()->LineTraceSingleByChannel(OutHit, ViewPortLocation, TraceEnd, ItemTraceChannel);
+	
+	LastActor = ThisActor;
+	ThisActor = OutHit.GetActor();
+	
+	if (ThisActor == LastActor)
+	{
+		return;
+	}
+
+	if (ThisActor.IsValid())
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Hit Actor: %s"), *ThisActor->GetName());
+	}
+
+	if (LastActor.IsValid())
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Stopt racin last Actor: %s"), *LastActor->GetName());
+	}
+
+	
+}
+

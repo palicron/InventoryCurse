@@ -17,23 +17,37 @@ class INVENTORY_API AInv_PlayerController : public APlayerController
 {
 	GENERATED_BODY()
 
+public:
 
+	AInv_PlayerController();
+
+	virtual void Tick(float DeltaTime) override;
 protected:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category= "Inventory")
+	float TraceDistance;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category= "Inventory")
+	TEnumAsByte<ECollisionChannel> ItemTraceChannel;
 
 	virtual void BeginPlay() override;
 	virtual void SetupInputComponent() override;
 	
-	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly,Category= "Inventory")
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category= "Inventory")
 	TArray<TObjectPtr<UInputMappingContext>> DefaultIMCs;
-	
-	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly,Category= "Inventory")
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category= "Inventory")
 	TObjectPtr<UInputAction> PrimaryInteractAction;
 
+	TWeakObjectPtr<AActor> ThisActor;
+	TWeakObjectPtr<AActor> LastActor;
 private:
 
 	UFUNCTION()
 	void PrimaryInteract();
-
+	
+	void TraceForItem();
+	
 	UPROPERTY(EditDefaultsOnly,Category= "Inventory")
 	TSubclassOf<UInv_HUDWidget> HUDWidgetClass;
 
