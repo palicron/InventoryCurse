@@ -18,6 +18,8 @@ public:
 
 	UInv_InventoryComponent();
 
+	UFUNCTION(BlueprintCallable)
+	void ToggleInventoryMenu();
 protected:
 	
 	virtual void BeginPlay() override;
@@ -27,6 +29,12 @@ protected:
 
 private:
 
+	bool bIsInventoryMenuOpen;
+
+	void OpenInventoryMenu();
+
+	void CloseInventoryMenu();
+	
 	TWeakObjectPtr<APlayerController> OwningController;
 	
 	UPROPERTY()
