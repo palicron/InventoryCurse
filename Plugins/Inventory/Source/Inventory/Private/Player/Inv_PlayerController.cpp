@@ -54,6 +54,20 @@ void AInv_PlayerController::SetupInputComponent()
 
 void AInv_PlayerController::PrimaryInteract()
 {
+	if (!ThisActor.IsValid())
+	{
+		return;
+	}
+
+	UInv_ItemComponent* ItemComponent = ThisActor->FindComponentByClass<UInv_ItemComponent>();
+
+	if (!ItemComponent || !InventoryComponent.IsValid())
+	{
+		return;
+	}
+
+	InventoryComponent->TryAddItem(ItemComponent);
+	
 	UE_LOG(LogTemp, Warning, TEXT("Primary Interact"));
 }
 
