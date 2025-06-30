@@ -4,7 +4,6 @@
 #include "Net/Serialization/FastArraySerializer.h"
 #include "Inv_FastArray.generated.h"
 
-
 class UInv_InventoryComponent;
 class UInv_InventoryItem;
 
@@ -39,9 +38,9 @@ struct FInv_InventoryFastArray : public FFastArraySerializer
 	FInv_InventoryFastArray():OwnerComponent(nullptr){}
 	FInv_InventoryFastArray(UActorComponent* InOwnerComponent):OwnerComponent(InOwnerComponent){}
 
-	TArray<FInv_InventoryEntry>& GetAllItems() { return Entries; }
+	TArray<UInv_InventoryItem*>  GetAllItems();
 
-#pragma region FFastArraySerializer
+// FFastArraySerializer
 
 	void PreReplicatedRemove(const TArrayView<int32> RemovedIndices, int32 FinalSize);
 	void PostReplicatedAdd(const TArrayView<int32> AddedIndices, int32 FinalSize);
@@ -55,8 +54,8 @@ struct FInv_InventoryFastArray : public FFastArraySerializer
 	UInv_InventoryItem* AddEntry(UInv_InventoryItem* Item);
 
 	void RemoveEntry(UInv_InventoryItem* Item);
-#pragma endregionFFastArraySerializer
-	
+//FFastArraySerializer
+ 	
 
 private:
 

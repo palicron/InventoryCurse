@@ -6,6 +6,7 @@
 #include "Components/ActorComponent.h"
 #include "Inv_InventoryComponent.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FInventoryItemChangeSignature, UInv_InventoryItem*, Item);
 
 class UInv_InventoryBase;
 
@@ -20,6 +21,10 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void ToggleInventoryMenu();
+
+	FInventoryItemChangeSignature OnItemAddedDelegate;
+
+	FInventoryItemChangeSignature OnItemRemoveDelegate;
 protected:
 	
 	virtual void BeginPlay() override;
