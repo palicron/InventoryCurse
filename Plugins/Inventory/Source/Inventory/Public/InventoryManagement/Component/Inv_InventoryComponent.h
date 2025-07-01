@@ -33,6 +33,12 @@ public:
 	UPROPERTY(BlueprintAssignable)
 	FNoRoomInInventorySignature NoRoomInInventoryDelegate;
 
+	UFUNCTION(Server, Reliable)
+	void Server_AddNewItem(UInv_ItemComponent* ItemComponent, const int32 StackCount);
+
+	UFUNCTION(Server, Reliable)
+	void Server_AddStacksToItem(UInv_ItemComponent* ItemComponent, const int32 StackCount, const int32 Remainder);
+	
 protected:
 	
 	virtual void BeginPlay() override;

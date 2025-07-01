@@ -8,6 +8,9 @@ UInv_InventoryComponent::UInv_InventoryComponent()
 	PrimaryComponentTick.bCanEverTick = false;
 }
 
+
+
+
 void UInv_InventoryComponent::BeginPlay()
 {
 	Super::BeginPlay();
@@ -53,7 +56,24 @@ void UInv_InventoryComponent::TryAddItem(UInv_ItemComponent* Item)
 		return;
 	}
 
+	if (Result.Items.IsValid() && Result.bStackable)
+	{
+		Server_AddStacksToItem(Item, Result.TotalRoomToFill, Result.bStackable ? Result.TotalRoomToFill : 0);
+	}
+	else if (Result.TotalRoomToFill > 0)
+	{
+		Server_AddNewItem(Item, Result.TotalRoomToFill);
+	}
+
 	//TODO: Add Items to the inventory
+}
+
+void UInv_InventoryComponent::Server_AddNewItem_Implementation(UInv_ItemComponent* ItemComponent,const int32 StackCount)
+{
+}
+
+void UInv_InventoryComponent::Server_AddStacksToItem_Implementation(UInv_ItemComponent* ItemComponent, const int32 StackCount, const int32 Remainder)
+{
 }
 
 void UInv_InventoryComponent::OpenInventoryMenu()
@@ -95,6 +115,4 @@ void UInv_InventoryComponent::CloseInventoryMenu()
 	OwningController->SetInputMode(InputMode);
 	OwningController->SetShowMouseCursor(false);
 }
-
-
 
