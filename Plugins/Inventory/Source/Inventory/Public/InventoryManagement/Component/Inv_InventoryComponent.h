@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "InventoryManagement/FastArray/Inv_FastArray.h"
 #include "Inv_InventoryComponent.generated.h"
 
 class UInv_ItemComponent;
@@ -38,6 +39,10 @@ public:
 
 	UFUNCTION(Server, Reliable)
 	void Server_AddStacksToItem(UInv_ItemComponent* ItemComponent, const int32 StackCount, const int32 Remainder);
+
+	void AddRepSubObj(UObject* SubObj);
+
+	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const override;
 	
 protected:
 	
@@ -61,5 +66,7 @@ private:
 	
 	void ConstructInventory();
 
-	
+	UPROPERTY(Replicated)
+	FInv_InventoryFastArray InventoryList;
+
 };

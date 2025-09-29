@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include "CoreMinimal.h"
+#include "Items/Components/Inv_ItemComponent.h"
 #include "Net/Serialization/FastArraySerializer.h"
 #include "Inv_FastArray.generated.h"
 
@@ -50,7 +51,7 @@ struct FInv_InventoryFastArray : public FFastArraySerializer
 		return FastArrayDeltaSerialize<FInv_InventoryEntry, FInv_InventoryFastArray>(Entries, DeltaParams, *this);
 	}
 
-	UInv_InventoryItem* AddEntry(UInv_InventoryComponent* ItemComponent);
+	UInv_InventoryItem* AddEntry(UInv_ItemComponent* ItemComponent);
 	UInv_InventoryItem* AddEntry(UInv_InventoryItem* Item);
 
 	void RemoveEntry(UInv_InventoryItem* Item);

@@ -2,14 +2,31 @@
 #include "InventoryManagement/Component/Inv_InventoryComponent.h"
 #include "Inventory/Public/Widgets/Inventory/InventoryBase/Inv_InventoryBase.h"
 #include "Blueprint/UserWidget.h"
+#include "Net/UnrealNetwork.h"
 
 UInv_InventoryComponent::UInv_InventoryComponent()
 {
 	PrimaryComponentTick.bCanEverTick = false;
+	SetIsReplicatedByDefault(true);
+	bReplicateUsingRegisteredSubObjectList = true;
+	bIsInventoryMenuOpen = false;
 }
 
 
+void UInv_InventoryComponent::AddRepSubObj(UObject* SubObj)
+{
+	if (IsUsingRegisteredSubObjectList() && IsReadyForReplication() && IsValid(SubObj))
+	{
+		AddReplicatedSubObject(SubObj);
+	}
+}
 
+void UInv_InventoryComponent::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(UInv_InventoryComponent,InventoryList);
+}
 
 void UInv_InventoryComponent::BeginPlay()
 {
@@ -70,6 +87,9 @@ void UInv_InventoryComponent::TryAddItem(UInv_ItemComponent* Item)
 
 void UInv_InventoryComponent::Server_AddNewItem_Implementation(UInv_ItemComponent* ItemComponent,const int32 StackCount)
 {
+	UInv_InventoryItem* NewItem =  InventoryList.AddEntry(ItemComponent);
+
+	//TODO Tell the owner to destroy it owning actor 
 }
 
 void UInv_InventoryComponent::Server_AddStacksToItem_Implementation(UInv_ItemComponent* ItemComponent, const int32 StackCount, const int32 Remainder)

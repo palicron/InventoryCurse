@@ -1,6 +1,7 @@
 ﻿#include "InventoryManagement/FastArray/Inv_FastArray.h"
 
 #include "InventoryManagement/Component/Inv_InventoryComponent.h"
+#include "Items/Inv_InventoryItem.h"
 
 
 void FInv_InventoryFastArray::PreReplicatedRemove(const TArrayView<int32> RemovedIndices, int32 FinalSize)
@@ -42,10 +43,25 @@ TArray<UInv_InventoryItem*> FInv_InventoryFastArray::GetAllItems()
 	return Results;
 }
 
-UInv_InventoryItem* FInv_InventoryFastArray::AddEntry(UInv_InventoryComponent* ItemComponent)
+UInv_InventoryItem* FInv_InventoryFastArray::AddEntry(UInv_ItemComponent* ItemComponent)
 {
-	//TODO Implement Once ItemComponent Is more complete
-	return nullptr;
+	check(OwnerComponent);
+	AActor* OwningActor = OwnerComponent->GetOwner();
+	check(OwningActor->HasAuthority());
+
+	UInv_InventoryComponent* InvC = Cast<UInv_InventoryComponent>(OwnerComponent);
+
+	if (InvC)
+	{
+		return nullptr;
+	}
+
+	FInv_InventoryEntry& NewEntry = Entries.AddDefaulted_GetRef();
+	NewEntry.Item = ItemComponent->GetItemManifest().Manifest(OwningActor);
+
+	InvC->AddRepSubObj(NewEntry.Item);
+	MarkItemDirty(NewEntry);
+	return NewEntry.Item;
 }
 
 UInv_InventoryItem* FInv_InventoryFastArray::AddEntry(UInv_InventoryItem* Item)
