@@ -7,9 +7,9 @@ public class InventoryProjectTarget : TargetRules
 {
 	public InventoryProjectTarget(TargetInfo Target) : base(Target)
 	{
-		Type = TargetType.Game;
-		DefaultBuildSettings = BuildSettingsVersion.V5;
-		IncludeOrderVersion = EngineIncludeOrderVersion.Unreal5_6;
+		Type = TargetType.Editor;
+		DefaultBuildSettings = BuildSettingsVersion.Latest;
+		IncludeOrderVersion = EngineIncludeOrderVersion.Latest;
 		ExtraModuleNames.Add("InventoryProject");
 	}
 }

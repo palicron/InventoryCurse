@@ -12,6 +12,8 @@ void UInv_InventoryItem::GetLifetimeReplicatedProps(TArray<class FLifetimeProper
 	DOREPLIFETIME(UInv_InventoryItem, ItemManifest);
 }
 
+
+
 void UInv_InventoryItem::SetItemManifest(const FInv_ItemManifest& Manifest)
 {
 	ItemManifest = FInstancedStruct::Make<FInv_ItemManifest>(Manifest);

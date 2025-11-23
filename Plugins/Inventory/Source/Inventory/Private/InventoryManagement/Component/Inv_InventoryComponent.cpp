@@ -4,7 +4,7 @@
 #include "Blueprint/UserWidget.h"
 #include "Net/UnrealNetwork.h"
 
-UInv_InventoryComponent::UInv_InventoryComponent()
+UInv_InventoryComponent::UInv_InventoryComponent(): InventoryList(this)
 {
 	PrimaryComponentTick.bCanEverTick = false;
 	SetIsReplicatedByDefault(true);
@@ -87,8 +87,12 @@ void UInv_InventoryComponent::TryAddItem(UInv_ItemComponent* Item)
 
 void UInv_InventoryComponent::Server_AddNewItem_Implementation(UInv_ItemComponent* ItemComponent,const int32 StackCount)
 {
-	UInv_InventoryItem* NewItem =  InventoryList.AddEntry(ItemComponent);
+	UInv_InventoryItem* NewItem = InventoryList.AddEntry(ItemComponent);
 
+	if (GetOwner() && (GetOwner()->GetNetMode() == NM_ListenServer || GetOwner()->GetNetMode() == NM_Standalone))
+	{
+		OnItemAddedDelegate.Broadcast(NewItem);
+	}
 	//TODO Tell the owner to destroy it owning actor 
 }
 
