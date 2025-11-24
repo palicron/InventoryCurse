@@ -46,4 +46,20 @@ private:
 	float GridPadding{0.f};
 };
 
+USTRUCT(BlueprintType)
+struct FInv_ImageFragment : public FInv_ItemFragment
+{
+	GENERATED_BODY()
 
+	UTexture2D* GetIcon() const { return Icon; }
+	void SetIcon(UTexture2D* NewIcon) { Icon = NewIcon; }
+
+	FVector2D GetIconSize() const { return IconSize; }
+
+private:
+	UPROPERTY(EditAnywhere, Category="Inventory")
+	TObjectPtr<UTexture2D> Icon{nullptr};
+
+	UPROPERTY(EditAnywhere, Category="Inventory")
+	FVector2D IconSize{50.f, 50.f};
+};
