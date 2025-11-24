@@ -4,6 +4,7 @@
 #include "Types/Inv_GridTypes.h"
 #include "StructUtils/InstancedStruct.h"
 #include "GameplayTagContainer.h"
+#include "Items/Fragments/Inv_ItemFragment.h"
 #include "Inv_ItemManifest.generated.h"
 
 
@@ -28,11 +29,16 @@ public:
 
 	FGameplayTag GetItemType() const { return ItemType; }
 private:
+	UPROPERTY(EditAnywhere, Category=" Inventory", meta =(ExcludeBaseStruct))
+	TArray<TInstancedStruct<FInv_ItemFragment>> ItemFragments;
+	
 	UPROPERTY(EditAnywhere, Category="Inventory")
 	EInv_ItemCategory ItemCategory{EInv_ItemCategory::None};
 
 	UPROPERTY(EditAnywhere)
 	FGameplayTag ItemType;
+
+	
 };
 
 
