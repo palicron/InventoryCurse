@@ -48,6 +48,7 @@ void UInv_InventoryGrid::ConstructGrid()
 }
 
 
+
 void UInv_InventoryGrid::AddItem(UInv_InventoryItem* Item)
 {
 	if (!MatchesCategory(Item))
@@ -55,7 +56,26 @@ void UInv_InventoryGrid::AddItem(UInv_InventoryItem* Item)
 		return;
 	}
 
-	UE_LOG(LogTemp, Warning, TEXT("Adding item to inventory grid"));
+	FInv_SlotAvailabilityResult Result = HasRoomForItem(Item);
+	
+	//Create a widget to show the icon and add it to the correct spot in the gris
+}
+
+FInv_SlotAvailabilityResult UInv_InventoryGrid::HasRoomForItem(const UInv_ItemComponent* ItemComponent) const
+{
+	return HasRoomForItem(ItemComponent->GetItemManifest());
+}
+
+FInv_SlotAvailabilityResult UInv_InventoryGrid::HasRoomForItem(const UInv_InventoryItem* Item) const
+{
+	return HasRoomForItem(Item->GetItemManifest());
+}
+
+FInv_SlotAvailabilityResult UInv_InventoryGrid::HasRoomForItem(const FInv_ItemManifest& Manifest) const
+{
+	FInv_SlotAvailabilityResult Result;
+	Result.TotalRoomToFill = 1;
+	return Result;
 }
 
 bool UInv_InventoryGrid::MatchesCategory(const UInv_InventoryItem* Item) const

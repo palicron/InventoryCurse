@@ -19,4 +19,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category="Inventory")
 	static UInv_InventoryComponent* GetInventoryComponent(const APlayerController* PlayerController);
+
+	UFUNCTION(BlueprintCallable, Category="Inventory")
+	static EInv_ItemCategory GetItemCategoryFromItemComp(const UInv_ItemComponent* ItemComponent);
 };

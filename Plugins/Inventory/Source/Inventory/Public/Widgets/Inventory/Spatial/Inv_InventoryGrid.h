@@ -7,6 +7,8 @@
 #include "Types/Inv_GridTypes.h"
 #include "Inv_InventoryGrid.generated.h"
 
+struct FInv_ItemManifest;
+class UInv_ItemComponent;
 class UInv_InventoryComponent;
 class UCanvasPanel;
 class UInv_GridSlot;
@@ -27,8 +29,12 @@ public:
 
 	UFUNCTION()
 	void AddItem(UInv_InventoryItem* Item);
+	
+	FInv_SlotAvailabilityResult HasRoomForItem(const UInv_ItemComponent* ItemComponent) const;
+
 protected:
 
+	
 	TWeakObjectPtr<UInv_InventoryComponent> InventoryComponent;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category= "Inventory")
@@ -52,6 +58,9 @@ protected:
 	TObjectPtr<UCanvasPanel> CanvasPanel;
 	
 	void ConstructGrid();
+
+	FInv_SlotAvailabilityResult HasRoomForItem(const UInv_InventoryItem* Item) const;
+	FInv_SlotAvailabilityResult HasRoomForItem(const FInv_ItemManifest& Manifest) const;
 
 private:
 

@@ -14,3 +14,13 @@ UInv_InventoryComponent* UInv_InventoryStatics::GetInventoryComponent(const APla
 
 	return PlayerController->FindComponentByClass<UInv_InventoryComponent>();
 }
+
+EInv_ItemCategory UInv_InventoryStatics::GetItemCategoryFromItemComp(const UInv_ItemComponent* ItemComponent)
+{
+	if (!ItemComponent)
+	{
+		return EInv_ItemCategory::None;
+	}
+
+	return ItemComponent->GetItemManifest().GetCategory();
+}
