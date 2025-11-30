@@ -14,6 +14,7 @@ struct FInv_ItemFragment
 	{
 	}
 
+	FGameplayTag GetFragmentTag() const { return FragmentTag; }
 	FInv_ItemFragment(const FInv_ItemFragment& Other) = default;
 	FInv_ItemFragment& operator=(const FInv_ItemFragment& Other) = default;
 	FInv_ItemFragment(FInv_ItemFragment&& Other) = default;
