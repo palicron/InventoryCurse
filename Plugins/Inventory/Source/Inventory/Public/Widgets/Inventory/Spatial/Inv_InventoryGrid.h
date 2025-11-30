@@ -65,5 +65,7 @@ protected:
 private:
 
 	bool MatchesCategory(const UInv_InventoryItem* Item) const;
+
+	void AddItemToIndices(const FInv_SlotAvailabilityResult& Result, UInv_InventoryItem* NewItem);
 	
 };

@@ -57,8 +57,7 @@ void UInv_InventoryGrid::AddItem(UInv_InventoryItem* Item)
 	}
 
 	FInv_SlotAvailabilityResult Result = HasRoomForItem(Item);
-	
-	//Create a widget to show the icon and add it to the correct spot in the gris
+	AddItemToIndices(Result,Item);
 }
 
 FInv_SlotAvailabilityResult UInv_InventoryGrid::HasRoomForItem(const UInv_ItemComponent* ItemComponent) const
@@ -71,10 +70,25 @@ FInv_SlotAvailabilityResult UInv_InventoryGrid::HasRoomForItem(const UInv_Invent
 	return HasRoomForItem(Item->GetItemManifest());
 }
 
+void UInv_InventoryGrid::AddItemToIndices(const FInv_SlotAvailabilityResult& Result, UInv_InventoryItem* NewItem)
+{
+	//TODO : Get Grid Fragment so we know how many grid spaces the item takes
+	//TODO : Get Image fragment so we can Get the icon to display
+
+	//TODO : Create a widget and add to the grid
+	//TODO : Store the new widget for usage
+}
+
 FInv_SlotAvailabilityResult UInv_InventoryGrid::HasRoomForItem(const FInv_ItemManifest& Manifest) const
 {
 	FInv_SlotAvailabilityResult Result;
 	Result.TotalRoomToFill = 1;
+
+	FInv_SlotAvailability SlotAvailability;
+	SlotAvailability.AmountToFill = 1;
+	SlotAvailability.Index = 0;
+
+	Result.SlotAvailability.Add(MoveTemp(SlotAvailability));
 	return Result;
 }
 
@@ -86,4 +100,5 @@ bool UInv_InventoryGrid::MatchesCategory(const UInv_InventoryItem* Item) const
 	}
 	return Item->GetItemManifest().GetCategory() == ItemCategory;
 }
+
 
