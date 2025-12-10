@@ -4,9 +4,12 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "Items/Fragments/Inv_ItemFragment.h"
 #include "Types/Inv_GridTypes.h"
 #include "Inv_InventoryGrid.generated.h"
 
+struct FInv_GridFragment;
+class UInv_SlottedItem;
 struct FInv_ItemManifest;
 class UInv_ItemComponent;
 class UInv_InventoryComponent;
@@ -57,9 +60,12 @@ protected:
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<UCanvasPanel> CanvasPanel;
 	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Inventory")
+	TSubclassOf<UInv_SlottedItem> SlottedItemClass;
 	void ConstructGrid();
 
 	FInv_SlotAvailabilityResult HasRoomForItem(const UInv_InventoryItem* Item) const;
+	void SetSlottedItemImage(const FInv_GridFragment* GridFragmentPtr, const FInv_ImageFragment* ImageFragmentPtr, const UInv_SlottedItem* SlottedItem);
 	FInv_SlotAvailabilityResult HasRoomForItem(const FInv_ItemManifest& Manifest) const;
 
 private:
@@ -67,5 +73,11 @@ private:
 	bool MatchesCategory(const UInv_InventoryItem* Item) const;
 
 	void AddItemToIndices(const FInv_SlotAvailabilityResult& Result, UInv_InventoryItem* NewItem);
+
+	FVector2D GetDrawSize(const FInv_GridFragment* GridFragment) const;
+	
+	UInv_SlottedItem*  CreateSlottedItem(UInv_InventoryItem* Item, int32 Index, bool bStackable, int32 StackAmount, const FInv_GridFragment* GridFragmentPtr, const FInv_ImageFragment* ImageFragmentPtr);
+
+	void AddItemToIndex(UInv_InventoryItem* Item, const int32 Index, const bool bStackable, const int32 StackAmount = 0);
 	
 };

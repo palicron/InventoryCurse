@@ -11,6 +11,7 @@
 #include "Items/Inv_InventoryItem.h"
 #include "Items/Fragments/Inv_FragmentTags.h"
 #include "Widgets/Inventory/GridSlots/Inv_GridSlot.h"
+#include "Widgets/Inventory/SlottedItem/Inv_SlottedItem.h"
 #include "Widgets/Utils/Inv_WidgetUtils.h"
 
 void UInv_InventoryGrid::NativeOnInitialized()
@@ -71,18 +72,46 @@ FInv_SlotAvailabilityResult UInv_InventoryGrid::HasRoomForItem(const UInv_Invent
 	return HasRoomForItem(Item->GetItemManifest());
 }
 
+void UInv_InventoryGrid::SetSlottedItemImage(const FInv_GridFragment* GridFragmentPtr, const FInv_ImageFragment* ImageFragmentPtr, const UInv_SlottedItem* SlottedItem)
+{
+	FSlateBrush Brush;
+	Brush.SetResourceObject(ImageFragmentPtr->GetIcon());
+	Brush.DrawAs = ESlateBrushDrawType::Image;
+	Brush.ImageSize = GetDrawSize(GridFragmentPtr);
+
+	SlottedItem->SetImageBrush(Brush);
+}
+
 void UInv_InventoryGrid::AddItemToIndices(const FInv_SlotAvailabilityResult& Result, UInv_InventoryItem* NewItem)
 {
-	const FInv_GridFragment* GridFragmentPtr = GetFragment<FInv_GridFragment>(NewItem, FragmentTags::Grid);
-	const FInv_ImageFragment* ImageFragmentPtr = GetFragment<FInv_ImageFragment>(NewItem, FragmentTags::Icon);
-	if (!GridFragmentPtr || !ImageFragmentPtr)
+	for (const auto& Availability : Result.SlotAvailability)
+	{
+		AddItemToIndex(NewItem, Availability.Index, Result.bStackable, Availability.AmountToFill);
+	}
+}
+
+
+FVector2D UInv_InventoryGrid::GetDrawSize(const FInv_GridFragment* GridFragment) const
+{
+	const float IconTileWidth = TileSize - GridFragment->GetGridPadding() * 2;
+	return GridFragment->GetGridSize() * IconTileWidth;
+}
+
+
+
+void UInv_InventoryGrid::AddItemToIndex(UInv_InventoryItem* Item, const int32 Index, const bool bStackable, const int32 StackAmount)
+{
+	const FInv_GridFragment* GridFragmentPtr = GetFragment<FInv_GridFragment>(Item, FragmentTags::Grid);
+	const FInv_ImageFragment* ImageFragmentPtr = GetFragment<FInv_ImageFragment>(Item, FragmentTags::Icon);
+
+	if (!GridFragmentPtr || !ImageFragmentPtr || !SlottedItemClass)
 	{
 		return;
 	}
 
-	
-	//TODO : Get Image fragment so we can Get the icon to display
+	UInv_SlottedItem* SlottedItem = CreateSlottedItem(Item, Index, bStackable, StackAmount, GridFragmentPtr, ImageFragmentPtr);
 
+	
 	//TODO : Create a widget and add to the grid
 	//TODO : Store the new widget for usage
 }
@@ -109,4 +138,15 @@ bool UInv_InventoryGrid::MatchesCategory(const UInv_InventoryItem* Item) const
 	return Item->GetItemManifest().GetCategory() == ItemCategory;
 }
 
+UInv_SlottedItem* UInv_InventoryGrid::CreateSlottedItem(UInv_InventoryItem* Item, const int32 Index, const bool bStackable, const int32 StackAmount, const FInv_GridFragment* GridFragmentPtr, const FInv_ImageFragment* ImageFragmentPtr)
+{
+	UInv_SlottedItem* SlottedItem = CreateWidget<UInv_SlottedItem>(GetOwningPlayer(), SlottedItemClass);
+	SlottedItem->SetInventoryItem(Item);
+	SetSlottedItemImage(GridFragmentPtr, ImageFragmentPtr, SlottedItem);
+	SlottedItem->SetGridIndex(Index);
+	SlottedItem->SetIsStackable(bStackable);
+
+	return SlottedItem;
+
+}
 
