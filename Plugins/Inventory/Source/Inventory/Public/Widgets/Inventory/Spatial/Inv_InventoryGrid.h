@@ -62,6 +62,10 @@ protected:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Inventory")
 	TSubclassOf<UInv_SlottedItem> SlottedItemClass;
+
+	UPROPERTY()
+	TMap<int32, TObjectPtr<UInv_SlottedItem>> SlottedItems;
+	
 	void ConstructGrid();
 
 	FInv_SlotAvailabilityResult HasRoomForItem(const UInv_InventoryItem* Item) const;
@@ -79,5 +83,6 @@ private:
 	UInv_SlottedItem*  CreateSlottedItem(UInv_InventoryItem* Item, int32 Index, bool bStackable, int32 StackAmount, const FInv_GridFragment* GridFragmentPtr, const FInv_ImageFragment* ImageFragmentPtr);
 
 	void AddItemToIndex(UInv_InventoryItem* Item, const int32 Index, const bool bStackable, const int32 StackAmount = 0);
-	
+
+	void AddSlottedItemToCanvas(const int32 Index, const FInv_GridFragment* GridFragment,UInv_SlottedItem* SlottedItem) const;
 };

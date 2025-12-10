@@ -51,7 +51,7 @@ UInv_InventoryItem* FInv_InventoryFastArray::AddEntry(UInv_ItemComponent* ItemCo
 
 	UInv_InventoryComponent* InvC = Cast<UInv_InventoryComponent>(OwnerComponent);
 
-	if (InvC)
+	if (!InvC)
 	{
 		return nullptr;
 	}
