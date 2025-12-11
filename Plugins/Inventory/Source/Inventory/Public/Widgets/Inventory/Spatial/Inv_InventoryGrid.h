@@ -85,4 +85,6 @@ private:
 	void AddItemToIndex(UInv_InventoryItem* Item, const int32 Index, const bool bStackable, const int32 StackAmount = 0);
 
 	void AddSlottedItemToCanvas(const int32 Index, const FInv_GridFragment* GridFragment,UInv_SlottedItem* SlottedItem) const;
+
+	void UpdateGridSlots(UInv_InventoryItem* Item, const int32 Index);
 };

@@ -7,6 +7,15 @@
 #include "Inv_GridSlot.generated.h"
 
 class UImage;
+
+UENUM(BlueprintType)
+enum class EInv_GridSlotState : uint8
+{
+	Unoccupied,
+	Occupied,
+	Selected,
+	GrayedOut
+};
 /**
  * 
  */
@@ -18,8 +27,32 @@ class INVENTORY_API UInv_GridSlot : public UUserWidget
 public:
 	void SetTileIndex(int32 Index) { TileIndex = Index; };
 	int32 GetTileIndex() const { return TileIndex; };
+
+	EInv_GridSlotState GetGridSlotState() const { return GridSlotState; };
+	void SetGridSlotState(EInv_GridSlotState NewState) { GridSlotState = NewState; };
+
+	void SetOccupiedTexture();
+	void SetUnoccupiedTexture();
+	void SetGrayedOutTexture();
+	void SetSelectedTexture();
+	
+protected:
+	
+	UPROPERTY(EditDefaultsOnly, Category="Inventory")
+	FSlateBrush Brush_Unoccupied;
+	UPROPERTY(EditDefaultsOnly, Category="Inventory")
+	FSlateBrush Brush_Occupied;
+	UPROPERTY(EditDefaultsOnly, Category="Inventory")
+	FSlateBrush Brush_Selected;
+	UPROPERTY(EditDefaultsOnly, Category="Inventory")
+	FSlateBrush Brush_GrayedOut;
 private:
+
+	EInv_GridSlotState GridSlotState;
 	int32 TileIndex;
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<UImage> Image_GridSlot;
+
+
+	
 };
